@@ -1,13 +1,11 @@
 package com.najacks.backend.domain.stream.service;
 
-import com.najacks.backend.discord.DiscordNotifier;
 import com.najacks.backend.domain.notification.entity.NotificationType;
 import com.najacks.backend.domain.notification.service.NotificationService;
 import com.najacks.backend.domain.stream.entity.StreamerLiveHistory;
 import com.najacks.backend.domain.stream.entity.StreamerLiveState;
 import com.najacks.backend.domain.stream.event.StreamEndedEvent;
 import com.najacks.backend.domain.stream.event.StreamStartedEvent;
-import com.najacks.backend.domain.stream.external.ChzzkLiveDetail;
 import com.najacks.backend.domain.stream.repository.StreamerLiveHistoryRepository;
 import com.najacks.backend.domain.stream.repository.StreamerLiveStateRepository;
 import com.najacks.backend.domain.user.entity.StreamerProfile;
@@ -38,7 +36,6 @@ public class StreamEventListeners {
     private final StreamerProfileRepository profileRepo;
     private final UserRepository userRepo;
     private final NotificationService notificationService;
-    private final DiscordNotifier discord;
     private final StreamerNotionSyncService notionSync;
 
     private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
@@ -97,25 +94,6 @@ public class StreamEventListeners {
                     ev.streamerNo());
         } catch (Exception e) {
             log.warn("방송 시작 알림 실패 streamerNo={}", ev.streamerNo(), e);
-        }
-    }
-
-    @Async("aiTaskExecutor")
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onStreamStartedDiscord(StreamStartedEvent ev) {
-        try {
-            User streamer = userRepo.findById(ev.streamerNo()).orElse(null);
-            if (streamer == null) return;
-            ChzzkLiveDetail d = ev.detail();
-            StreamerProfile profile = profileRepo.findByUserId(ev.streamerNo()).orElse(null);
-            String channelUrl = profile != null ? profile.getChzzkUrl() : null;
-
-            String title = "🔴 " + streamer.getNickname() + " 방송 시작";
-            String desc = (d != null && d.getLiveTitle() != null ? d.getLiveTitle() : "(제목 없음)")
-                    + (d != null && d.getLiveCategoryValue() != null ? "\n카테고리: " + d.getLiveCategoryValue() : "");
-            discord.sendNoticeWithUrl(title, desc, channelUrl, 0xDC3545);
-        } catch (Exception e) {
-            log.warn("방송 시작 Discord 알림 실패", e);
         }
     }
 

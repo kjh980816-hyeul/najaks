@@ -19,7 +19,6 @@
 - 주간 리포트 자동 생성 (Notion DB 연동)
 - 채팅 분석 / DAU 트래킹
 - 관리자 페이지 (대시보드 · 배너 · 회원 · 리포트 처리)
-- Discord 웹훅 알림 (관리자/공지 채널)
 
 ---
 
@@ -40,7 +39,6 @@ cd backend
 #   AWS_S3_BUCKET, AWS_ACCESS_KEY, AWS_SECRET_KEY
 #   GEMINI_API_KEY (선택)
 #   NOTION_TOKEN, NOTION_DB_* (선택)
-#   DISCORD_WEBHOOK_* (선택)
 #   CHZZK_CLIENT_ID, CHZZK_CLIENT_SECRET, CHZZK_REDIRECT_URI
 #   CRYPTO_MASTER_KEY
 #   MAIL_USERNAME, MAIL_PASSWORD (gmail SMTP)
@@ -72,7 +70,6 @@ najaks/
 │       │   ├── ai/          Gemini API 클라이언트 + 분류 파이프라인
 │       │   ├── auth/        회원 가입/로그인/JWT/이메일 인증
 │       │   ├── config/      Security, CORS, WebClient 설정
-│       │   ├── discord/     Discord webhook 발송
 │       │   ├── domain/
 │       │   │   ├── admin/   관리자 대시보드/배너/통계
 │       │   │   ├── broadcast/   방송 일정
@@ -122,7 +119,7 @@ najaks/
 
 **Frontend**: Vue 3.5 (Composition API) / Vite 8 / Pinia / Vue Router 4 / Axios / cropperjs (이미지 크롭)
 
-**외부 통합**: 치지직 OpenAPI / Gemini AI / Notion API / Discord Webhook / Gmail SMTP
+**외부 통합**: 치지직 OpenAPI / Gemini AI / Notion API / Gmail SMTP
 
 **배포**: AWS EC2 (Amazon Corretto 17) + RDS MySQL + S3 + nginx (SPA fallback + /api 프록시) + systemd
 

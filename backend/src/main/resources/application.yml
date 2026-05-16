@@ -81,10 +81,6 @@ app:
       weekly-reports: ${NOTION_DB_WEEKLY_REPORTS:}
       streamers: ${NOTION_DB_STREAMERS:}
       stream-analysis: ${NOTION_DB_STREAM_ANALYSIS:}
-  discord:
-    webhook:
-      admin: ${DISCORD_WEBHOOK_ADMIN:}
-      notice: ${DISCORD_WEBHOOK_NOTICE:}
   chzzk:
     client-id: ${CHZZK_CLIENT_ID:}
     client-secret: ${CHZZK_CLIENT_SECRET:}

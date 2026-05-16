@@ -1,6 +1,5 @@
 package com.najacks.backend.domain.report.ai;
 
-import com.najacks.backend.discord.DiscordNotifier;
 import com.najacks.backend.domain.report.dto.AiClassificationResult;
 import com.najacks.backend.domain.report.entity.AiStatus;
 import com.najacks.backend.domain.report.entity.Report;
@@ -28,7 +27,6 @@ public class ReportAiProcessor {
     private final ReportRepository reportRepo;
     private final GeminiReportClassifier classifier;
     private final ReportNotionSyncService notionSync;
-    private final DiscordNotifier discord;
 
     @Async("aiTaskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -64,21 +62,6 @@ public class ReportAiProcessor {
                     reportRepo.save(report);
                 }
             }, null);
-
-            if (report.getAiSeverity() != null && report.getAiSeverity() >= 4) {
-                runStep("Discord 알림", report, () -> {
-                    String title = String.format("🚨 고심각도 신고 #%d (Lv%d)",
-                            report.getId(), report.getAiSeverity());
-                    String desc = String.format("[%s] %s\n대상: %s:%d\n신고사유: %s",
-                            report.getAiCategory() != null ? report.getAiCategory().name() : "ETC",
-                            report.getAiSummary() != null ? report.getAiSummary() : "",
-                            report.getTargetType().name(),
-                            report.getTargetId(),
-                            truncate(report.getReason(), 500));
-                    int color = report.getAiSeverity() >= 5 ? 0xDD2222 : 0xEE7700;
-                    discord.sendAdmin(title, desc, color);
-                }, null);
-            }
         }
     }
 

@@ -1,6 +1,5 @@
 package com.najacks.backend.domain.report.weekly.service;
 
-import com.najacks.backend.discord.DiscordNotifier;
 import com.najacks.backend.domain.report.weekly.dto.WeeklyInsight;
 import com.najacks.backend.domain.report.weekly.dto.WeeklyStats;
 import com.najacks.backend.domain.report.weekly.entity.WeeklyReportRun;
@@ -23,7 +22,6 @@ public class WeeklyReportScheduler {
     private final WeeklyStatsService statsService;
     private final WeeklyInsightGenerator insightGenerator;
     private final WeeklyReportNotionSync notionSync;
-    private final DiscordNotifier discord;
     private final WeeklyReportRunRepository runRepo;
 
     /** 매주 월요일 09:00 KST */
@@ -56,12 +54,6 @@ public class WeeklyReportScheduler {
             String pageId = notionSync.createReport(stats, insight);
 
             if (pageId != null) {
-                String url = "https://www.notion.so/" + pageId.replace("-", "");
-                discord.sendNoticeWithUrl(
-                        "📊 " + weekLabel + " 주간 리포트",
-                        insight.getHeadline() != null ? insight.getHeadline() : "자동 생성됨",
-                        url,
-                        0x5B8DEF);
                 run.markSuccess(pageId);
             } else {
                 // Notion 미설정 시에도 성공으로 처리 (데이터 수집만 완료)
@@ -71,9 +63,6 @@ public class WeeklyReportScheduler {
         } catch (Exception e) {
             log.error("주간 리포트 실패 week={}", weekLabel, e);
             run.markFailed(e.getMessage());
-            discord.sendAdmin("⚠️ 주간 리포트 실패 " + weekLabel,
-                    e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName(),
-                    0xDD2222);
         } finally {
             runRepo.save(run);
         }
