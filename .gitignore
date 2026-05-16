@@ -1,0 +1,42 @@
+# ===== 시크릿 =====
+*.pem
+*.key
+.env
+.env.local
+.env.*.local
+**/application-local.yml
+**/application-prod.yml
+najakskey*
+
+# ===== Node =====
+node_modules/
+dist/
+.vite/
+*.log
+npm-debug.log*
+
+# ===== Java / Gradle =====
+.gradle/
+build/
+out/
+*.class
+target/
+hs_err_pid*
+
+# ===== 업로드 =====
+uploads/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini

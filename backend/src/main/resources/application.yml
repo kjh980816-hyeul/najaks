@@ -1,0 +1,98 @@
+spring:
+  application:
+    name: najacks-backend
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/najacks?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    default-encoding: UTF-8
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:najacks-default-secret-key-for-development-only-change-in-production}
+  access-token-expiry: 1800000
+  refresh-token-expiry: 604800000
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET:najacks-bucket}
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:}
+      secret-key: ${AWS_SECRET_KEY:}
+
+app:
+  upload:
+    local-dir: ${UPLOAD_LOCAL_DIR:${java.io.tmpdir}/najacks-uploads}
+    public-base: ${UPLOAD_PUBLIC_BASE:/uploads}
+  site:
+    base-url: ${SITE_BASE_URL:https://najaks.co.kr}
+  mail:
+    from: ${MAIL_FROM:${MAIL_USERNAME:noreply@najaks.co.kr}}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    default-model: ${GEMINI_DEFAULT_MODEL:gemini-2.5-flash}
+    lite-model: ${GEMINI_LITE_MODEL:gemini-2.5-flash-lite}
+    base-url: https://generativelanguage.googleapis.com
+  notion:
+    token: ${NOTION_TOKEN:}
+    version: ${NOTION_VERSION:2022-06-28}
+    base-url: https://api.notion.com
+    database:
+      reports: ${NOTION_DB_REPORTS:}
+      weekly-reports: ${NOTION_DB_WEEKLY_REPORTS:}
+      streamers: ${NOTION_DB_STREAMERS:}
+      stream-analysis: ${NOTION_DB_STREAM_ANALYSIS:}
+  discord:
+    webhook:
+      admin: ${DISCORD_WEBHOOK_ADMIN:}
+      notice: ${DISCORD_WEBHOOK_NOTICE:}
+  chzzk:
+    client-id: ${CHZZK_CLIENT_ID:}
+    client-secret: ${CHZZK_CLIENT_SECRET:}
+    redirect-uri: ${CHZZK_REDIRECT_URI:}
+    base-url: https://openapi.chzzk.naver.com
+  crypto:
+    master-key: ${CRYPTO_MASTER_KEY:}
+  stream:
+    poll:
+      enabled: ${STREAM_POLL_ENABLED:true}
+      batch-size: 20

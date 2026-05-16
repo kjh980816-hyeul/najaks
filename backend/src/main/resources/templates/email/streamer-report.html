@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>방송 분석 리포트</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#222;">
+<div style="max-width:640px;margin:0 auto;padding:32px 24px;background:#ffffff;">
+    <div style="text-align:center;padding-bottom:16px;border-bottom:2px solid #5B8DEF;">
+        <h1 style="margin:0;font-size:24px;color:#222;">🎬 <span th:text="${streamerNickname}">스트리머</span>님의 방송 분석 리포트</h1>
+        <p style="color:#666;margin:6px 0 0;font-size:14px;" th:text="${streamTitle}">방송 제목</p>
+    </div>
+
+    <section style="margin-top:24px;padding:14px 18px;background:#eef3ff;border-radius:10px;text-align:center;">
+        <div style="font-size:13px;color:#5B8DEF;font-weight:600;">📅 방송 일시 (KST)</div>
+        <div style="margin-top:6px;font-size:16px;color:#222;font-weight:600;" th:text="${streamPeriod}">2026-04-20 (월) 19:30 ~ 21:15</div>
+        <div style="margin-top:4px;color:#555;font-size:14px;" th:text="${durationFormatted}">1시간 45분</div>
+    </section>
+
+    <section style="margin-top:24px;padding:18px;background:#f9fafc;border-radius:10px;">
+        <p style="margin:0;line-height:1.7;font-size:15px;" th:text="${aiIntro}">개인화 인트로</p>
+    </section>
+
+    <section style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">📊 방송 지표</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr>
+                <td style="padding:12px;background:#fff4e6;border-radius:8px;text-align:center;width:50%;">
+                    최고 동시 시청자<br>
+                    <strong style="font-size:22px;color:#ff9500;" th:text="${peakViewers}">-</strong>
+                </td>
+                <td style="width:8px;"></td>
+                <td style="padding:12px;background:#fdeaea;border-radius:8px;text-align:center;width:50%;">
+                    하이라이트<br>
+                    <strong style="font-size:22px;color:#e75555;" th:text="${highlightCount}">0</strong> 개
+                </td>
+            </tr>
+        </table>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;">
+            <tr>
+                <td style="padding:12px;background:#f0f4ff;border-radius:8px;text-align:center;width:50%;">
+                    총 채팅 수<br>
+                    <strong style="font-size:22px;color:#5B8DEF;" th:text="${totalChats}">0</strong>
+                </td>
+                <td style="width:8px;"></td>
+                <td style="padding:12px;background:#e6f7ed;border-radius:8px;text-align:center;width:50%;">
+                    순 참여자<br>
+                    <strong style="font-size:22px;color:#22aa66;" th:text="${uniqueChatters}">0</strong>
+                </td>
+            </tr>
+        </table>
+        <div th:if="${analysisMood != null and !analysisMood.isEmpty()}"
+             style="margin-top:10px;padding:10px;background:#f7f7fa;border-radius:8px;text-align:center;font-size:14px;color:#555;">
+            전반적 분위기: <strong style="color:#5B8DEF;" th:text="${analysisMood}">평온</strong>
+        </div>
+    </section>
+
+    <section th:if="${keywordsList != null and !keywordsList.isEmpty()}" style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">🏷️ 주요 키워드</h2>
+        <div>
+            <span th:each="kw : ${keywordsList}"
+                  style="display:inline-block;margin:4px 6px 4px 0;padding:6px 12px;background:#eef3ff;color:#2f5dc7;border-radius:16px;font-size:13px;"
+                  th:text="'#' + ${kw}">#키워드</span>
+        </div>
+    </section>
+
+    <section style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">💡 AI 요약</h2>
+        <p style="background:#fff;border-left:4px solid #5B8DEF;padding:14px 16px;margin:0;line-height:1.75;font-size:15px;white-space:pre-wrap;"
+           th:text="${aiSummary}">AI가 생성한 방송 요약</p>
+    </section>
+
+    <section th:if="${momentsList != null and !momentsList.isEmpty()}" style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">🎯 시간대별 주요 순간</h2>
+        <div th:each="m : ${momentsList}"
+             style="margin-bottom:10px;padding:12px 14px;background:#fffaf0;border-left:4px solid #ff9500;border-radius:4px;">
+            <div style="font-size:13px;color:#ff7a00;font-weight:600;" th:text="${m.time}">HH:mm</div>
+            <div style="font-size:15px;margin-top:4px;font-weight:600;" th:text="${m.title}">이벤트 제목</div>
+            <div style="font-size:14px;margin-top:4px;color:#555;line-height:1.6;" th:text="${m.detail}">상세</div>
+        </div>
+    </section>
+
+    <section th:if="${audienceInsight != null and !audienceInsight.isEmpty()}" style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">👥 시청자 참여 분석</h2>
+        <p style="background:#f0fff4;border-left:4px solid #22aa66;padding:14px 16px;margin:0;line-height:1.75;font-size:15px;"
+           th:text="${audienceInsight}">시청자 분석</p>
+    </section>
+
+    <section th:if="${tipsList != null and !tipsList.isEmpty()}" style="margin-top:28px;">
+        <h2 style="font-size:18px;margin:0 0 12px;color:#444;">💬 다음 방송 팁</h2>
+        <ul style="margin:0;padding:14px 16px 14px 32px;background:#fff7ee;border-left:4px solid #ff9500;border-radius:4px;line-height:1.75;">
+            <li th:each="t : ${tipsList}" style="font-size:15px;color:#333;margin-bottom:6px;" th:text="${t}">팁</li>
+        </ul>
+    </section>
+
+    <section style="margin-top:32px;text-align:center;">
+        <a th:href="${siteUrl}" style="display:inline-block;padding:12px 28px;background:#5B8DEF;color:white;text-decoration:none;border-radius:8px;font-size:14px;">
+            나작스에서 프로필 보기
+        </a>
+    </section>
+
+    <footer style="margin-top:36px;padding-top:20px;border-top:1px solid #eee;text-align:center;color:#888;font-size:12px;">
+        <p style="margin:0;">— 나작스 AI 분석 시스템이 자동으로 생성한 리포트입니다</p>
+        <p style="margin:8px 0 0;">
+            더 이상 리포트를 받지 않으려면
+            <a th:href="${unsubscribeUrl}" style="color:#5B8DEF;">수신 거부</a>
+        </p>
+    </footer>
+</div>
+</body>
+</html>
